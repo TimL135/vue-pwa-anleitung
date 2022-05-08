@@ -1,0 +1,44 @@
+1. führe den befehl "vue add pwa" aus
+
+2. import './registerServiceWorker' in "main.ts"
+
+3. erstelle im Projektordner "vue.config.js"
+
+4. kopiere folgendes in "vue.config.js". ändere den publicPath
+
+module.exports = {
+  publicPath: "/gt", //enter the name of the git repo here
+  outputDir: "./docs",
+  //pwa: {
+  //workboxPluginMode: "InjectManifest",
+  //workboxOptions: {
+  //swSrc: "src/service-worker.js",
+  //},
+  //},
+  css: {
+    extract: false,
+  },
+};
+
+5. (optional)für automatische updates kopiere folgendes in "registerServiceWorker.ts"
+
+const cacheName = 'v1'//must be changed after an update
+
+self.addEventListener('activate', event => {
+    // Remove old caches
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    event.waitUntil(
+        (async () => {
+            const keys = await caches.keys()
+            return keys.map(async cache => {
+                if (cache !== cacheName) {
+                    console.log('Service Worker: Removing old cache: ' + cache)
+                    return await caches.delete(cache)
+                }
+            })
+        })()
+    )
+})
+
+6. führe den befehl "npm run build" aus
